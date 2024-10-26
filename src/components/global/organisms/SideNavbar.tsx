@@ -5,7 +5,7 @@ import { useState } from 'react'
 import { Nav } from '../atoms/ui/nav'
 
 interface SideNavbarProps {
-  isAdmin: boolean
+  isManager: boolean
 }
 
 import { useWindowWidth } from '@react-hook/window-size'
@@ -18,12 +18,16 @@ import {
   Route,
   Settings,
   SwatchBook,
+  ReceiptText,
   Users,
-  UsersRound
+  UsersRound,
+  Biohazard,
+  Fish,
+  Nut
 } from 'lucide-react'
 import { Button } from '../atoms/ui/button'
 
-export default function SideNavbar({ isAdmin }: SideNavbarProps) {
+export default function SideNavbar({ isManager }: SideNavbarProps) {
   // console.log('admin ơ nav', isAdmin)
   const [isCollapsed, setIsCollapsed] = useState(false)
 
@@ -33,39 +37,6 @@ export default function SideNavbar({ isAdmin }: SideNavbarProps) {
   function toggleSidebar() {
     setIsCollapsed(!isCollapsed)
   }
-  const adminLinks = [
-    {
-      title: 'Dashboard',
-      href: '/home/admin',
-      icon: LayoutDashboard,
-      variant: 'default' as 'default' | 'ghost'
-    },
-    {
-      title: 'Admin2',
-      href: '/users',
-      icon: UsersRound,
-      variant: 'ghost' as 'default' | 'ghost'
-    },
-    {
-      title: 'Admin2',
-      href: '/companies',
-      icon: Handshake,
-      variant: 'ghost' as 'default' | 'ghost'
-    },
-    {
-      title: 'Settings',
-      href: '/settings',
-      icon: Settings,
-      variant: 'ghost' as 'default' | 'ghost'
-    }
-    // {
-    //   title: 'Đăng xuất',
-    //   href: '/login',
-    //   icon: LogOut,
-    //   variant: 'ghost' as 'default' | 'ghost'
-    // }
-  ]
-
   const managerLinks = [
     {
       title: 'Dashboard',
@@ -74,21 +45,55 @@ export default function SideNavbar({ isAdmin }: SideNavbarProps) {
       variant: 'default' as 'default' | 'ghost'
     },
     {
-      title: 'Manager2',
-      href: '/staffs',
-      icon: Users,
+      title: 'Orders',
+      href: '/orders',
+      icon: ReceiptText,
+      variant: 'ghost' as 'default' | 'ghost'
+    },
+    {
+      title: 'Breeds',
+      href: '/breeds',
+      icon: Biohazard,
+      variant: 'ghost' as 'default' | 'ghost'
+    },
+    
+    {
+      title: 'Fishes',
+      href: '/fishes',
+      icon: Fish,
+      variant: 'ghost' as 'default' | 'ghost'
+    },
+    {
+      title: 'Diets',
+      href: '/diets',
+      icon: Nut,
+      variant: 'ghost' as 'default' | 'ghost'
+    },
+    {
+      title: 'Users',
+      href: '/users',
+      icon: UsersRound,
+      variant: 'ghost' as 'default' | 'ghost'
+    },
+    // {
+    //   title: 'Đăng xuất',
+    //   href: '/login',
+    //   icon: LogOut,
+    //   variant: 'ghost' as 'default' | 'ghost'
+    // }
+  ]
+
+  const staffLinks = [
+    {
+      title: 'Dashboard',
+      href: '/home/staff',
+      icon: LayoutDashboard,
       variant: 'default' as 'default' | 'ghost'
     },
     {
-      title: 'Manager3',
-      href: '/trips',
-      icon: Bus,
-      variant: 'default' as 'default' | 'ghost'
-    },
-    {
-      title: 'Manager4',
-      href: '/routes',
-      icon: Route,
+      title: 'Orders',
+      href: '/ordersCheck',
+      icon: ReceiptText,
       variant: 'default' as 'default' | 'ghost'
     }
   ]
@@ -109,7 +114,7 @@ export default function SideNavbar({ isAdmin }: SideNavbarProps) {
 
       <Nav
         isCollapsed={mobileWidth ? true : isCollapsed}
-        links={isAdmin ? adminLinks : managerLinks}
+        links={isManager ? managerLinks : staffLinks}
         // links={adminLinks }
       />
     </div>
