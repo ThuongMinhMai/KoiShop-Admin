@@ -16,13 +16,13 @@ import { useAuth } from '@/auth/AuthProvider'
 function RouteLayout() {
   const { user, loading, logout } = useAuth()
   console.log('user ở layout', user)
-  const [isAdmin, setIsAdmin] = useState<boolean>(false)
+  const [isManager, setIsManager] = useState<boolean>(false)
   // const {userDetail} = useAuth();
   // console.log("user ở layout", userDetail);
 
   useEffect(() => {
     if (user) {
-      setIsAdmin(user.roleName === 'ADMIN')
+      setIsManager(user.roleName === 'MANAGER')
     }
   }, [user])
   if (loading) {
@@ -95,7 +95,7 @@ function RouteLayout() {
       </div>
       <div className='min-h-screen h-fit w-full bg-white text-black flex'>
         {user ? (
-          <SideNavbar isAdmin={isAdmin} />
+          <SideNavbar isManager={isManager} />
         ) : (
           <div className='flex justify-center items-center w-full'>
             <Loader className='w-4 h-4 animate-spin' />

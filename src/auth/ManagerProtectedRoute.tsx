@@ -2,11 +2,11 @@ import React from 'react'
 import { Navigate, RouteProps } from 'react-router-dom'
 import { useAuth } from '@/auth/AuthProvider'
 
-type ManagerProtectedRouteProps  = RouteProps & {
-  children: React.ReactNode
-}
+type AdminProtectedRouteProps = RouteProps & {
+    children: React.ReactNode
+  }
 
-const ManagerProtectedRoute: React.FC<ManagerProtectedRouteProps> = ({ children }) => {
+const ManagerProtectedRoute: React.FC<AdminProtectedRouteProps> = ({ children }) => {
   const { user } = useAuth()
 
   if (!user) {
@@ -15,7 +15,7 @@ const ManagerProtectedRoute: React.FC<ManagerProtectedRouteProps> = ({ children 
   }
 
   if (user.roleName !== 'MANAGER') {
-    // Redirect to not authorized page if user is not a manager or admin
+    // Redirect to not authorized page if user is not an admin
     return <Navigate to="/not-authorized" />
   }
 

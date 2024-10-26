@@ -129,7 +129,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
           setUser(userData)
           // console.log("User Data after login:", userData)
           // console.log("check",response.data.Result.RoleName)
-          if (response.data.data.roleName === 'MANAGER' || response.data.data.roleName === 'ADMIN') {
+          if (response.data.data.roleName === 'MANAGER' || response.data.data.roleName === 'STAFF') {
             toast.success('Sign in successfully!')
             navigate(`/home/${response.data.data.roleName.toLowerCase()}`)
           } else {

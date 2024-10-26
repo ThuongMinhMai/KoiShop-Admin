@@ -11,9 +11,9 @@ const ProtectedRoute = ({ children }: ProtectedRouteProps) => {
   const token = localStorage.getItem('token')
   const location = useLocation()
   const navigate = useNavigate()
-  if (user?.roleName==="ADMIN" || user?.roleName==="MANAGER") {
+  if (user?.roleName==="STAFF" || user?.roleName==="MANAGER") {
     // If token exists, navigate back to the previous page or to the home page as a fallback
-    return <Navigate to={location.state?.from || `/home/${user?.roleName==="ADMIN"?"admin":"manager"}`} replace />
+    return <Navigate to={location.state?.from || `/home/${user?.roleName==="STAFF"?"staff":"manager"}`} replace />
   } 
   return <>{children}</>
 }

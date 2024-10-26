@@ -1,6 +1,5 @@
 import React, { Suspense, useEffect, useState } from 'react'
 import { Route, Routes } from 'react-router-dom'
-import AdminProtectedRoute from './auth/AdminProtectedRoute'
 import ManagerProtectedRoute from './auth/ManagerProtectedRoute'
 import ProtectedRoute from './auth/ProtectedRoute'
 import Loader from './components/global/molecules/Loader'
@@ -9,7 +8,10 @@ import SignInForm from './components/global/organisms/SignInForm'
 import NotAuthorized from './components/global/templates/NotAuthorized'
 import NotFoundPage from './components/global/templates/NotFoundPage'
 import ProfilePage from './components/global/templates/ProfilePage'
+import StaffProtectedRoute from './auth/StaffProtectedRoute'
 const RouteLayout = React.lazy(() => import('./components/global/Layout/RouteLayout'))
+const AllAccount= React.lazy(() => import('./components/global/templates/AllAccount'))
+
 function App() {
   const [loading, setLoading] = useState<boolean>(true)
 
@@ -25,14 +27,6 @@ function App() {
     <Routes>
       <Route element={<RouteLayout />}>
         <Route
-          path='/home/admin'
-          element={
-            <AdminProtectedRoute>
-              <Suspense fallback={<Loader />}>{/* components */}</Suspense>
-            </AdminProtectedRoute>
-          }
-        />
-        <Route
           path='/home/manager'
           element={
             <ManagerProtectedRoute>
@@ -40,33 +34,25 @@ function App() {
             </ManagerProtectedRoute>
           }
         />
+        <Route
+          path='/home/staff'
+          element={
+            <StaffProtectedRoute>
+              <Suspense fallback={<Loader />}>{/* components */}</Suspense>
+            </StaffProtectedRoute>
+          }
+        />
 
         <Route
           path='/users'
           element={
-            <AdminProtectedRoute>
-              <Suspense fallback={<Loader />}>{/* components */}</Suspense>
-            </AdminProtectedRoute>
+            <ManagerProtectedRoute>
+              <Suspense fallback={<Loader />}><AllAccount /></Suspense>
+            </ManagerProtectedRoute>
           }
         />
         <Route
-          path='/companies'
-          element={
-            <AdminProtectedRoute>
-              <Suspense fallback={<Loader />}>{/* components */}</Suspense>
-            </AdminProtectedRoute>
-          }
-        />
-        <Route
-          path='/settings'
-          element={
-            <AdminProtectedRoute>
-              <Suspense fallback={<Loader />}>{/* components */}</Suspense>
-            </AdminProtectedRoute>
-          }
-        />
-        <Route
-          path='/staffs'
+          path='/orders'
           element={
             <ManagerProtectedRoute>
               <Suspense fallback={<Loader />}>{/* components */}</Suspense>
@@ -74,7 +60,7 @@ function App() {
           }
         />
         <Route
-          path='/trips'
+          path='/breeds'
           element={
             <ManagerProtectedRoute>
               <Suspense fallback={<Loader />}>{/* components */}</Suspense>
@@ -82,11 +68,27 @@ function App() {
           }
         />
         <Route
-          path='/routes'
+          path='/fishes'
           element={
             <ManagerProtectedRoute>
               <Suspense fallback={<Loader />}>{/* components */}</Suspense>
             </ManagerProtectedRoute>
+          }
+        />
+        <Route
+          path='/diets'
+          element={
+            <ManagerProtectedRoute>
+              <Suspense fallback={<Loader />}>{/* components */}</Suspense>
+            </ManagerProtectedRoute>
+          }
+        />
+        <Route
+          path='/ordersCheck'
+          element={
+            <StaffProtectedRoute>
+              <Suspense fallback={<Loader />}>{/* components */}</Suspense>
+            </StaffProtectedRoute>
           }
         />
 
