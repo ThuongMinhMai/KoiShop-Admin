@@ -9,6 +9,7 @@ import NotAuthorized from './components/global/templates/NotAuthorized'
 import NotFoundPage from './components/global/templates/NotFoundPage'
 import ProfilePage from './components/global/templates/ProfilePage'
 import StaffProtectedRoute from './auth/StaffProtectedRoute'
+import AllFishes from './components/global/templates/AllFishes'
 const RouteLayout = React.lazy(() => import('./components/global/Layout/RouteLayout'))
 const AllAccount= React.lazy(() => import('./components/global/templates/AllAccount'))
 
@@ -71,7 +72,7 @@ function App() {
           path='/fishes'
           element={
             <ManagerProtectedRoute>
-              <Suspense fallback={<Loader />}>{/* components */}</Suspense>
+              <Suspense fallback={<Loader />}><AllFishes/></Suspense>
             </ManagerProtectedRoute>
           }
         />
