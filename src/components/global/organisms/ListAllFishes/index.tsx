@@ -34,6 +34,8 @@ interface Fish {
   ownerId: number
   koiCertificates: object
   koiBreeds: object
+  koiDiaries: object
+  owner: object
 }
 
 function ListAllFish() {
@@ -86,14 +88,23 @@ function ListAllFish() {
         const statusToUpdate = newStatus !== undefined ? newStatus : selectedFish.isAvailableForSale
         await koiAPI.put(`/api/v1/koi-fishes/${selectedFish.id}`, {
           name: selectedFish.name,
-          dob: selectedFish.dob,
+          origin: selectedFish.origin,
           gender: selectedFish.gender,
+          dob: selectedFish.dob,
           length: selectedFish.length,
           weight: selectedFish.weight,
+          price: selectedFish.price,
+          isSold: selectedFish.isSold,
           personalityTraits: selectedFish.personalityTraits,
           dailyFeedAmount: selectedFish.dailyFeedAmount,
           lastHealthCheck: selectedFish.lastHealthCheck,
-          isAvailableForSale: statusToUpdate
+          isConsigned: selectedFish.isConsigned,
+          ownerId: selectedFish.ownerId,
+          koiCertificates: selectedFish.koiCertificates,
+          koiBreeds: selectedFish.koiBreeds,
+          koiDiaries: selectedFish.koiDiaries,
+          owner: selectedFish.owner,
+          isAvailableForSale: statusToUpdate          
         })
         setFishes((prevFish) =>
           prevFish.map((fish) => (fish.id === selectedFish.id ? { ...fish, isAvailableForSale: statusToUpdate } : fish))

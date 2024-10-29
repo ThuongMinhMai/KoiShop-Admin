@@ -6,6 +6,7 @@ import { Button } from '@/components/global/atoms/ui/button'
 import { Input } from '@/components/global/atoms/ui/input'
 import { DataTableFacetedFilter } from '../table/faceted-filter'
 import { DataTableViewOptions } from '../table/view-options'
+import { useNavigate } from 'react-router-dom'
 
 interface Fish {
   id: number
@@ -28,6 +29,7 @@ interface Fish {
 }
 
 export function DataTableToolbar<TData>({ table }: { table: Table<TData> }) {
+  const navigate = useNavigate()
   const isFiltered = table.getState().columnFilters.length > 0
   // const uniqueBreed = Array.from(table.getColumn('koiBreeds')?.getFacetedUniqueValues()?.entries() || []).map(
   //   ([key]) => key
@@ -61,6 +63,7 @@ export function DataTableToolbar<TData>({ table }: { table: Table<TData> }) {
           </Button>
         )}
       </div>
+      <Button onClick={() => navigate('/fishes/addFish')}> Add Fish </Button>
       <div>
         <DataTableViewOptions table={table} />
       </div>
