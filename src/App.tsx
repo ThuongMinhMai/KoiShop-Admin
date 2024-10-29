@@ -10,6 +10,7 @@ import NotFoundPage from './components/global/templates/NotFoundPage'
 import ProfilePage from './components/global/templates/ProfilePage'
 import StaffProtectedRoute from './auth/StaffProtectedRoute'
 import AllFishes from './components/global/templates/AllFishes'
+import AddFishForm from './components/global/organisms/ListAllFishes/addFish'
 const RouteLayout = React.lazy(() => import('./components/global/Layout/RouteLayout'))
 const AllAccount= React.lazy(() => import('./components/global/templates/AllAccount'))
 
@@ -73,6 +74,14 @@ function App() {
           element={
             <ManagerProtectedRoute>
               <Suspense fallback={<Loader />}><AllFishes/></Suspense>
+            </ManagerProtectedRoute>
+          }
+        />
+        <Route
+          path='/fishes/addFish'
+          element={
+            <ManagerProtectedRoute>
+              <Suspense fallback={<Loader />}><AddFishForm/></Suspense>
             </ManagerProtectedRoute>
           }
         />

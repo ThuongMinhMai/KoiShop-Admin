@@ -116,6 +116,8 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
         email: email,
         password: password
       })
+      localStorage.setItem('tokenHeader', response.data.data.jwt)
+
       const newToken = response.data.data.userId
       setToken(newToken)
       localStorage.setItem('token', newToken)
@@ -135,6 +137,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
           } else {
             toast.error('The account is not allowed to log into the system!')
             localStorage.removeItem('token')
+            localStorage.removeItem('tokenHeader')
           }
         } catch (error) {
           toast.error('Login error. Please try again later!')
