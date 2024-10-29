@@ -11,6 +11,7 @@ import ProfilePage from './components/global/templates/ProfilePage'
 import StaffProtectedRoute from './auth/StaffProtectedRoute'
 import AllFishes from './components/global/templates/AllFishes'
 import AddFishForm from './components/global/organisms/ListAllFishes/addFish'
+import AllOrder from './components/global/templates/AllOrder'
 const RouteLayout = React.lazy(() => import('./components/global/Layout/RouteLayout'))
 const AllAccount= React.lazy(() => import('./components/global/templates/AllAccount'))
 
@@ -57,7 +58,7 @@ function App() {
           path='/orders'
           element={
             <ManagerProtectedRoute>
-              <Suspense fallback={<Loader />}>{/* components */}</Suspense>
+              <Suspense fallback={<Loader />}><AllOrder/></Suspense>
             </ManagerProtectedRoute>
           }
         />
