@@ -98,7 +98,7 @@ function App() {
           path='/ordersCheck'
           element={
             <StaffProtectedRoute>
-              <Suspense fallback={<Loader />}>{/* components */}</Suspense>
+              <Suspense fallback={<Loader />}><AllOrder/></Suspense>
             </StaffProtectedRoute>
           }
         />

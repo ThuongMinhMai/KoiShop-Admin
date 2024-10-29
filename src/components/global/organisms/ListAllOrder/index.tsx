@@ -32,7 +32,7 @@ interface Order {
 }
 
 function ListAllOrder() {
-  const { user } = useAuth();
+//   const { user } = useAuth();
   const navigate = useNavigate();
   const [orders, setOrders] = useState<Order[]>([]);
   const [isLoadingOrders, setIsLoadingOrders] = useState(true);
