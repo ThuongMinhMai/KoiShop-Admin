@@ -4,6 +4,7 @@ import { DataTableColumnHeader } from '../table/col-header';
 import { Badge } from '../../atoms/ui/badge';
 // import { DataTableRowActions } from './row-actions';
 import { useNavigate } from 'react-router-dom'
+import { DataTableRowActions } from './row-actions';
 
 interface Order {
   id: number;
@@ -61,23 +62,26 @@ export const columns = (
       accessorKey: 'orderStatus',
       header: ({ column }) => <DataTableColumnHeader column={column} title="Order Status" />,
       cell: ({ row }) => {
-        const orderStatus = row.getValue('orderStatus') as string;
+        // const orderStatus = row.getValue('orderStatus') as string;
 
-        const statusBadgeVariant: Record<'PENDING' |'SHIPPED'| 'DELIVERED' | 'CANCELLED', 'default' | 'warning'|'info' | 'success' | 'breed'> = {
-          PENDING: 'warning',
-          SHIPPED: 'info',
-          DELIVERED: 'success',
-          CANCELLED: 'breed'
-        };
+        // const statusBadgeVariant: Record<'PENDING' |'SHIPPED'| 'DELIVERED' | 'CANCELLED', 'default' | 'warning'|'info' | 'success' | 'breed'> = {
+        //   PENDING: 'warning',
+        //   SHIPPED: 'info',
+        //   DELIVERED: 'success',
+        //   CANCELLED: 'breed'
+        // };
 
-        const badgeVariant = statusBadgeVariant[orderStatus as keyof typeof statusBadgeVariant] || 'default';
+        // const badgeVariant = statusBadgeVariant[orderStatus as keyof typeof statusBadgeVariant] || 'default';
 
-        return (
-          <Badge variant={badgeVariant}>
-            {orderStatus || 'Unknown Status'}
-          </Badge>
-        );
-      }
+        // return (
+        //   <Badge variant={badgeVariant}>
+        //     {orderStatus || 'Unknown Status'}
+        //   </Badge>
+        // );
+        return <DataTableRowActions row={row} handleStatusChange={handleStatusChange} />
+      },
+      filterFn: (row, id, value) => value.includes(row.getValue(id))
+
     },
     {
       accessorKey: 'shippingAddress',
@@ -87,7 +91,9 @@ export const columns = (
     {
       accessorKey: 'paymentMethod',
       header: ({ column }) => <DataTableColumnHeader column={column} title="Payment Method" />,
-      cell: ({ row }) => <div>{row.getValue('paymentMethod')}</div>
+      cell: ({ row }) => <div>{row.getValue('paymentMethod')}</div>,
+      filterFn: (row, id, value) => value.includes(row.getValue(id))
+
     },
     {
       accessorKey: 'note',

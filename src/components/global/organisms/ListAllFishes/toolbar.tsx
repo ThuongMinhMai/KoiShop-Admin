@@ -63,7 +63,6 @@ export function DataTableToolbar<TData>({ table }: { table: Table<TData> }) {
           </Button>
         )}
       </div>
-      <Button onClick={() => navigate('/fishes/addFish')}> Add Fish </Button>
       <div>
         <DataTableViewOptions table={table} />
       </div>

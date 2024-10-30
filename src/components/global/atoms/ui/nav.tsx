@@ -83,8 +83,8 @@ export function Nav({ links, isCollapsed }: NavProps) {
                     variant: link.href === pathName ? "default" : "ghost",
                     size: "lg"
                   }),
-                  link.href === pathName && "text-white bg-[#6d1a1a]",
-
+                  // link.href === pathName && "text-white bg-[#6d1a1a]",
+                  pathName.startsWith(link.href) && "text-white bg-primary",
                   link.variant === "default" &&
                     "dark:bg-muted dark:text-white dark:hover:bg-muted dark:hover:text-white",
                   "justify-start mr-5"

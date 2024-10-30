@@ -1,7 +1,7 @@
 import { useAuth } from '@/auth/AuthProvider'
 import koiAPI from '@/lib/koiAPI'
 import axios from 'axios'
-import { Loader } from 'lucide-react'
+import { Loader, Plus } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Button } from '../../atoms/ui/button'
@@ -15,7 +15,13 @@ import { DataTableToolbar } from './toolbar'
 interface ApiResponse<T> {
   data: T
 }
-
+interface koiBreed{
+  id:number
+  name:string
+  content:string
+  imageUrl:string | null
+  isDeleted:boolean
+}
 interface Fish {
   id: number
   name: string
@@ -33,7 +39,7 @@ interface Fish {
   isSold: boolean
   ownerId: number
   koiCertificates: object
-  koiBreeds: object
+  koiBreeds: koiBreed[]
   koiDiaries: object
   owner: object
 }
@@ -85,11 +91,14 @@ function ListAllFish() {
       try {
         console.log('new status', newStatus)
         console.log("fish", selectedFish)
+        console.log("fish breed", selectedFish.koiBreeds)
+        const koiBreedIds = selectedFish.koiBreeds.map(breed => breed.id);
         const statusToUpdate = newStatus !== undefined ? newStatus : selectedFish.isAvailableForSale
         await koiAPI.put(`/api/v1/koi-fishes/${selectedFish.id}`, {
           name: selectedFish.name,
           origin: selectedFish.origin,
-          gender: selectedFish.gender,
+          // gender: selectedFish.gender,
+          gender: true,
           dob: selectedFish.dob,
           length: selectedFish.length,
           weight: selectedFish.weight,
@@ -98,12 +107,14 @@ function ListAllFish() {
           personalityTraits: selectedFish.personalityTraits,
           dailyFeedAmount: selectedFish.dailyFeedAmount,
           lastHealthCheck: selectedFish.lastHealthCheck,
-          isConsigned: selectedFish.isConsigned,
-          ownerId: selectedFish.ownerId,
-          koiCertificates: selectedFish.koiCertificates,
-          koiBreeds: selectedFish.koiBreeds,
-          koiDiaries: selectedFish.koiDiaries,
-          owner: selectedFish.owner,
+          // isConsigned: selectedFish.isConsigned,
+          // ownerId: selectedFish.ownerId,
+          // koiCertificates: selectedFish.koiCertificates,
+          isDeleted:false,
+          koiBreedIds:koiBreedIds,
+          // koiDiaries: selectedFish.koiDiaries,
+          // owner: selectedFish.owner,
+          imageUrls:[],
           isAvailableForSale: statusToUpdate          
         })
         setFishes((prevFish) =>
@@ -148,6 +159,8 @@ function ListAllFish() {
     <div className='flex h-full flex-1 flex-col'>
       <div className='flex justify-between'>
         <h1 className='my-4 border-b pb-2 text-3xl font-semibold tracking-wider first:mt-0'>Fish list</h1>
+      <Button variant="outline_primary" onClick={() => navigate('/fishes/addFish')}><Plus className='w-4 h-4 mr-1'/> Add Fish </Button>
+
       </div>
       <DataTable
         data={fishes}

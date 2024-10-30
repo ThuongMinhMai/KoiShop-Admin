@@ -102,6 +102,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
           setUser(userData)
         } catch (error) {
           localStorage.removeItem('token')
+          localStorage.removeItem('tokenHeader')
           console.error('Fetching user information failed:', error)
         }
       }
@@ -161,6 +162,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     setToken(null)
     setUser(null)
     localStorage.removeItem('token')
+    localStorage.removeItem('tokenHeader')
     navigate('/')
   }
 

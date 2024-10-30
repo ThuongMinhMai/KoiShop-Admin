@@ -25,7 +25,7 @@ export function DataTableRowActions<TData extends Order>({
   handleStatusChange
 }: DataTableRowActionsProps<TData>) {
   const statusString = row.original.orderStatus;
-
+console.log("trang thai order", statusString)
   return (
     <div>
       <Select
@@ -36,17 +36,20 @@ export function DataTableRowActions<TData extends Order>({
           <SelectValue />
         </SelectTrigger>
         <SelectContent className="w-fit">
-          <SelectItem value="Pending">
+          <SelectItem value="PENDING">
             <Badge variant="warning">Pending</Badge>
           </SelectItem>
-          <SelectItem value="Shipped">
+          <SelectItem value="SHIPPED">
             <Badge variant="info">Shipped</Badge>
           </SelectItem>
-          <SelectItem value="Delivered">
-            <Badge variant="success">Delivered</Badge>
+          <SelectItem value="DELIVERED">
+            <Badge variant="default">Delivered</Badge>
           </SelectItem>
-          <SelectItem value="Cancelled">
+          <SelectItem value="CANCELLED">
             <Badge variant="destructive">Cancelled</Badge>
+          </SelectItem>
+          <SelectItem value="COMPLETED">
+            <Badge variant="success">Complete</Badge>
           </SelectItem>
         </SelectContent>
       </Select>
