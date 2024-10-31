@@ -65,6 +65,14 @@ function App() {
           }
         />
         <Route
+          path='/orders/:id'
+          element={
+            <ManagerProtectedRoute>
+              <Suspense fallback={<Loader />}><AllOrder/></Suspense>
+            </ManagerProtectedRoute>
+          }
+        />
+        <Route
           path='/breeds'
           element={
             <ManagerProtectedRoute>
@@ -110,6 +118,14 @@ function App() {
             <ManagerProtectedRoute>
               <Suspense fallback={<Loader />}><AddFishForm /></Suspense>
             </ManagerProtectedRoute>
+          }
+        />
+        <Route
+          path='/ordersCheck/:id'
+          element={
+            <StaffProtectedRoute>
+              <Suspense fallback={<Loader />}><AllOrder/></Suspense>
+            </StaffProtectedRoute>
           }
         />
         <Route
