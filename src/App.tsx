@@ -104,7 +104,14 @@ function App() {
             </ManagerProtectedRoute>
           }
         />
-      
+       <Route
+          path='/fishes/:id'
+          element={
+            <ManagerProtectedRoute>
+              <Suspense fallback={<Loader />}><AddFishForm /></Suspense>
+            </ManagerProtectedRoute>
+          }
+        />
         <Route
           path='/ordersCheck'
           element={

@@ -1,10 +1,12 @@
 import { ColumnDef } from '@tanstack/react-table'
 import { Tooltip } from 'antd'
 import { DataTableColumnHeader } from '../table/col-header'
-import { Eye, Plus, User, UserCheck } from 'lucide-react'
+import { SquarePen, User, UserCheck } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 import { Badge } from '../../atoms/ui/badge'
 import { DataTableRowActions } from './row-actions'
+import { Button } from '../../atoms/ui/button';
+
 
 interface Fish {
   id: number
@@ -22,7 +24,7 @@ interface Fish {
   isConsigned: boolean
   isSold: boolean
   ownerId: number
-  koiCertificates: []
+  koiCertificates: object
   koiBreeds: object
 }
 
@@ -30,7 +32,7 @@ export const columns = (
   navigate: ReturnType<typeof useNavigate>,
   handleStatusChange: (fish: Fish, status: boolean) => void,
   handleEditName: (fish: Fish, newName: string) => void,
-  handleShowCertificateModal: (fish: Fish) => void
+  handleShowAmentiModal: (fish: Fish) => void
 ): ColumnDef<Fish>[] => {
   return [
     {
@@ -146,26 +148,6 @@ export const columns = (
       filterFn: (row, id, value) => value.includes(row.getValue(id))
     },
     {
-      accessorKey: 'koiCertificates',
-      header: ({ column }) => <DataTableColumnHeader column={column} title='Certificates' />,
-      cell: ({ row }) => {
-        const koiCertificates = row.original.koiCertificates
-        return (
-          <div>
-            <div
-              className='text-primary flex gap-2 items-center cursor-pointer'
-              onClick={() => handleShowCertificateModal(row.original)}
-            >
-              <>
-                <Eye className='w-4 h-4 mr-2' />
-                View Certificates
-              </>
-            </div>
-          </div>
-        )
-      }
-    },
-    {
       accessorKey: 'isAvailableForSale',
       header: ({ column }) => <DataTableColumnHeader column={column} title='Status' />,
       cell: ({ row }) => {
@@ -185,6 +167,7 @@ export const columns = (
             </Tooltip> */}
             <DataTableRowActions row={row} handleStatusChange={handleStatusChange} />
           </div>
+          
         )
       },
       filterFn: (row, id, value) => {
@@ -194,6 +177,11 @@ export const columns = (
         }
         return false
       }
-    }
+    },
+    {
+      accessorKey: 'actions',
+      header: ({ column }) => null,
+      cell: ({ row }) => <Button variant='ghost' size='icon' onClick={() => navigate(`/fishes/${row.getValue('id')}`)}><SquarePen className='w-6 h-6'/></Button>
+    },
   ]
 }
