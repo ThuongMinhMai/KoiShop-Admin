@@ -224,7 +224,7 @@ const AddFishForm: React.FC = () => {
           title: 'Fish Updated',
           description: 'The fish has been update successfully!'
         })
-        setTimeout(() => navigate('/breeds'), 1000)
+        setTimeout(() => navigate('/fishes'), 1000)
       } else {
         const response = await koiAPI.post('/api/v1/koi-fishes', {
           name: newFish.name,
