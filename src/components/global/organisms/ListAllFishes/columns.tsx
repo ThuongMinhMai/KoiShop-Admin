@@ -5,8 +5,7 @@ import { SquarePen, User, UserCheck } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 import { Badge } from '../../atoms/ui/badge'
 import { DataTableRowActions } from './row-actions'
-import { Button } from '../../atoms/ui/button';
-
+import { Button } from '../../atoms/ui/button'
 
 interface Fish {
   id: number
@@ -25,7 +24,16 @@ interface Fish {
   isSold: boolean
   ownerId: number
   koiCertificates: object
-  koiBreeds: object
+  koiBreeds: koiBreed[]
+  imageUrl: string
+}
+
+interface koiBreed {
+  id: number
+  name: string
+  content: string
+  imageUrl: string | null
+  isDeleted: boolean
 }
 
 export const columns = (
@@ -45,13 +53,24 @@ export const columns = (
       accessorKey: 'koiFishImages',
       header: ({ column }) => <DataTableColumnHeader column={column} title='koi Fish Images' />,
       cell: ({ row }) => (
-        <div>
+        <div className='ml-5'>
           <img
-            className='rounded-full h-12 w-12 object-cover drop-shadow-lg'
-            src={row.getValue('koiFishImages')}
-            alt='koiFishImages'
+            src={
+              row.getValue('imageUrl')
+                ? row.getValue('imageUrl')
+                : 'https://sanvuonadong.vn/wp-content/uploads/2021/02/ca-koi-buom-01.jpg'
+            }
+            alt={row.getValue('name')}
+            className='w-12 h-24 rounded-lg object-cover'
           />
         </div>
+        // <div>
+        //   <img
+        //     className='rounded-full h-12 w-12 object-cover drop-shadow-lg'
+        //     src={row.getValue('koiFishImages')}
+        //     alt='koiFishImages'
+        //   />
+        // </div>
       ),
       enableHiding: false
     },
@@ -167,7 +186,6 @@ export const columns = (
             </Tooltip> */}
             <DataTableRowActions row={row} handleStatusChange={handleStatusChange} />
           </div>
-          
         )
       },
       filterFn: (row, id, value) => {
@@ -181,7 +199,11 @@ export const columns = (
     {
       accessorKey: 'actions',
       header: ({ column }) => null,
-      cell: ({ row }) => <Button variant='ghost' size='icon' onClick={() => navigate(`/fishes/${row.getValue('id')}`)}><SquarePen className='w-6 h-6'/></Button>
-    },
+      cell: ({ row }) => (
+        <Button variant='ghost' size='icon' onClick={() => navigate(`/fishes/${row.getValue('id')}`)}>
+          <SquarePen className='w-6 h-6' />
+        </Button>
+      )
+    }
   ]
 }
