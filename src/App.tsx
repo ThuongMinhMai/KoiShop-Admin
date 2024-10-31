@@ -104,14 +104,7 @@ function App() {
             </ManagerProtectedRoute>
           }
         />
-        <Route
-          path='/diets'
-          element={
-            <ManagerProtectedRoute>
-              <Suspense fallback={<Loader />}>{/* components */}</Suspense>
-            </ManagerProtectedRoute>
-          }
-        />
+      
         <Route
           path='/ordersCheck'
           element={
