@@ -7,6 +7,8 @@ import './addFishForm.css'
 import { ArrowLeft } from 'lucide-react'
 import { isDataView } from 'util/types'
 import { boolean } from 'zod'
+import { Button } from '../../atoms/ui/button'
+
 interface Fish {
   id: number
   name: string
@@ -131,54 +133,54 @@ const AddFishForm: React.FC = () => {
     })
   }
 
-  // const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-  //   if (id) {
-  //     const { name, value, type } = e.target
-  //     // Type guard for HTMLInputElement
-  //     if (e.target instanceof HTMLInputElement) {
-  //       const inputValue =
-  //         type === 'checkbox'
-  //           ? e.target.checked
-  //           : name === 'dob' || name === 'lastHealthCheck'
-  //             ? new Date(value)
-  //             : name === 'gender'
-  //             ? value.toLowerCase()  === 'male'
-  //             : value
-  //       setFishData({
-  //         ...fishData,
-  //         [e.target.name]: e.target.value
-  //       })
-  //     } else if (e.target instanceof HTMLSelectElement) {
-  //       const selectedOptions = Array.from(e.target.selectedOptions, (option) => Number(option.value))
-  //       setFishData({
-  //         ...fishData,
-  //         [e.target.name]: selectedOptions
-  //       })
-  //     }
-  //   } else {
-  //     const { name, value, type } = e.target
-  //     // Type guard for HTMLInputElement
-  //     if (e.target instanceof HTMLInputElement) {
-  //       const inputValue =
-  //         type === 'checkbox'
-  //           ? e.target.checked
-  //           : name === 'dob' || name === 'lastHealthCheck'
-  //             ? new Date(value)
-  //             : value
-  //       setNewFish((prevFish) => ({
-  //         ...prevFish,
-  //         [name]: inputValue
-  //       }))
-  //     } else if (e.target instanceof HTMLSelectElement) {
-  //       const selectedOptions = Array.from(e.target.selectedOptions, (option) => Number(option.value))
-  //       setNewFish((prevFish) => ({
-  //         ...prevFish,
-  //         [name]: selectedOptions
-  //       }))
-  //     }
-  //   }
-  // }
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+    // if (id) {
+    //   const { name, value, type } = e.target
+    //   // Type guard for HTMLInputElement
+    //   if (e.target instanceof HTMLInputElement) {
+    //     const inputValue =
+    //       type === 'checkbox'
+    //         ? e.target.checked
+    //         : name === 'dob' || name === 'lastHealthCheck'
+    //           ? new Date(value)
+    //           : name === 'gender'
+    //           ? value.toLowerCase()  === 'male'
+    //           : value
+    //     setFishData({
+    //       ...fishData,
+    //       [e.target.name]: e.target.value
+    //     })
+    //   } else if (e.target instanceof HTMLSelectElement) {
+    //     const selectedOptions = Array.from(e.target.selectedOptions, (option) => Number(option.value))
+    //     setFishData({
+    //       ...fishData,
+    //       [e.target.name]: selectedOptions
+    //     })
+    //   }
+    // } else {
+      const { name, value, type } = e.target
+      // Type guard for HTMLInputElement
+      if (e.target instanceof HTMLInputElement) {
+        const inputValue =
+          type === 'checkbox'
+            ? e.target.checked
+            : name === 'dob' || name === 'lastHealthCheck'
+              ? new Date(value)
+              : value
+        setNewFish((prevFish) => ({
+          ...prevFish,
+          [name]: inputValue
+        }))
+      } else if (e.target instanceof HTMLSelectElement) {
+        const selectedOptions = Array.from(e.target.selectedOptions, (option) => Number(option.value))
+        setNewFish((prevFish) => ({
+          ...prevFish,
+          [name]: selectedOptions
+        }))
+      }
+    // }
+  }
+  const handleUpdateChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value, type } = e.target
     let inputValue: any = value
 
@@ -308,21 +310,21 @@ const AddFishForm: React.FC = () => {
           <h2 className='text-2xl font-semibold mb-4 text-center'>{id ? 'Update' : 'Add'} Fish</h2>
 
           <label htmlFor='name'>Name:</label>
-          <input type='text' id='name' name='name' value={fishData.name} onChange={handleInputChange} />
+          <input type='text' id='name' name='name' value={fishData.name} onChange={handleUpdateChange} />
           <br />
           <label htmlFor='origin'>Origin:</label>
-          <input type='text' id='origin' name='origin' value={fishData.origin} onChange={handleInputChange} />
+          <input type='text' id='origin' name='origin' value={fishData.origin} onChange={handleUpdateChange} />
           <br />
           {/* <label htmlFor='gender'>Gender:</label>
           <input type='text' id='gender' name='gender' value={fishData.gender} onChange={handleInputChange} />
           <br /> */}
          <label>Gender:</label>
         <label>
-          <input type="radio" name="gender" value="true" checked={fishData.gender === "Male" || fishData.gender === true} onChange={handleInputChange} />
+          <input type="radio" name="gender" value="true" checked={fishData.gender === "Male" || fishData.gender === true} onChange={handleUpdateChange} />
           Male
         </label>
         <label>
-          <input type="radio" name="gender" value="false" checked={fishData.gender === "Female"|| fishData.gender === false} onChange={handleInputChange} />
+          <input type="radio" name="gender" value="false" checked={fishData.gender === "Female"|| fishData.gender === false} onChange={handleUpdateChange} />
           Female
         </label>
           {/* <input
@@ -344,15 +346,15 @@ const AddFishForm: React.FC = () => {
             type='date'
             id='dob'
             name='dob'
-            value={newFish.dob.toISOString().substring(0, 10)}
-            onChange={handleInputChange}
+            value={fishData.dob.toISOString().substring(0, 10)}
+            onChange={handleUpdateChange}
           />
           <br />
           <label htmlFor='length'>Length (cm):</label>
-          <input type='number' id='length' name='length' value={fishData.length} onChange={handleInputChange} />
+          <input type='number' id='length' name='length' value={fishData.length} onChange={handleUpdateChange} />
           <br />
           <label htmlFor='weight'>Weight (g):</label>
-          <input type='number' id='weight' name='weight' value={fishData.weight} onChange={handleInputChange} />
+          <input type='number' id='weight' name='weight' value={fishData.weight} onChange={handleUpdateChange} />
           <br />
           <label htmlFor='personalityTraits'>Personality Traits:</label>
           <input
@@ -360,7 +362,7 @@ const AddFishForm: React.FC = () => {
             id='personalityTraits'
             name='personalityTraits'
             value={fishData.personalityTraits}
-            onChange={handleInputChange}
+            onChange={handleUpdateChange}
           />
           <br />
           <label htmlFor='dailyFeedAmount'>Daily Feed Amount (g):</label>
@@ -369,7 +371,7 @@ const AddFishForm: React.FC = () => {
             id='dailyFeedAmount'
             name='dailyFeedAmount'
             value={fishData.dailyFeedAmount}
-            onChange={handleInputChange}
+            onChange={handleUpdateChange}
           />
           <br />
           <label htmlFor='lastHealthCheck'>Last Health Check:</label>
@@ -378,7 +380,7 @@ const AddFishForm: React.FC = () => {
             id='lastHealthCheck'
             name='lastHealthCheck'
             value={fishData.lastHealthCheck.toISOString().substring(0, 10)}
-            onChange={handleInputChange}
+            onChange={handleUpdateChange}
           />
           <br />
           <label htmlFor='isAvailableForSale'>Available for Sale:</label>
@@ -387,14 +389,14 @@ const AddFishForm: React.FC = () => {
             id='isAvailableForSale'
             name='isAvailableForSale'
             checked={fishData.isAvailableForSale}
-            onChange={handleInputChange}
+            onChange={handleUpdateChange}
           />
           <br />
           <label htmlFor='price'>Price:</label>
-          <input type='number' id='price' name='price' value={fishData.price} onChange={handleInputChange} />
+          <input type='number' id='price' name='price' value={fishData.price} onChange={handleUpdateChange} />
           <br />
           <label htmlFor='isSold'>Sold:</label>
-          <input type='checkbox' id='isSold' name='isSold' checked={fishData.isSold} onChange={handleInputChange} />
+          <input type='checkbox' id='isSold' name='isSold' checked={fishData.isSold} onChange={handleUpdateChange} />
           <br />
           <label htmlFor='koiBreedIds'>Koi Breed:</label>
           <select
@@ -433,8 +435,9 @@ const AddFishForm: React.FC = () => {
             id='imageUrls'
             name='imageUrls'
             placeholder='Enter image URL'
-            value={newImageUrl}
-            onChange={(e) => setNewImageUrl(e.target.value)}
+            value={fishData.imageUrls}
+            onChange={(e) => setFishData({ ...fishData, imageUrls: [String(e.target.value)] })}
+
           />
           {/* <button type='button' onClick={addImageUrl}>
         Add Image URL
@@ -445,7 +448,7 @@ const AddFishForm: React.FC = () => {
           <li key={index}>{url}</li>
         ))}
       </ul> */}
-          <button type='submit'>{id ? 'Update' : 'Add'} Fish</button>
+          <button type='submit' className='w-full py-2 px-4'>{id ? 'Update' : 'Add'} Fish</button>
         </form>
       ) : (
         <form id='addFishForm' onSubmit={handleSubmit}>
@@ -532,7 +535,7 @@ const AddFishForm: React.FC = () => {
             ))}
           </select>
           <br />
-          <label htmlFor='koiCertificates'>Koi Certificates:</label>
+          {/* <label htmlFor='koiCertificates'>Koi Certificates:</label>
           <input
             type='text'
             id='koiCertificates'
@@ -543,7 +546,7 @@ const AddFishForm: React.FC = () => {
             value={newFish.koiCertificates}
             // onChange={(e) => setNewImageUrl(e.target.value)}
             onChange={(e) => setNewFish({ ...newFish, koiCertificates: [String(e.target.value)] })}
-          />
+          /> */}
           {/* <button type='button' onClick={addKoiCertificate}>
         Add Certificate
       </button> */}
@@ -572,8 +575,38 @@ const AddFishForm: React.FC = () => {
           <li key={index}>{url}</li>
         ))}
       </ul> */}
-          <button type='submit'>{id ? 'Update' : 'Add'} Fish</button>
+          <button type='submit' className='w-full py-2 px-4'>{id ? 'Update' : 'Add'} Fish</button>
         </form>
+      )}
+       <div className='max-w-md mx-auto'>
+        {id && (
+          <Button
+            className='w-full py-2 px-4 mt-4 border-primary text-primary hover:text-primary'
+            variant='outline'
+            onClick={() => setShowDeleteModal(true)}
+          >
+            Delete Fish
+          </Button>
+        )}
+      </div>
+      {showDeleteModal && (
+        <div className='fixed inset-0 flex items-center justify-center bg-black bg-opacity-50'>
+          <div className='bg-white p-6 rounded shadow-md max-w-sm w-full'>
+            <h3 className='text-lg font-semibold'>Confirm Deletion</h3>
+            <p className='mt-2 text-gray-600'>Are you sure you want to delete this fish?</p>
+            <div className='flex justify-end space-x-4 mt-4'>
+              <Button
+                onClick={() => setShowDeleteModal(false)}
+                className='px-4 py-2 bg-white text-primary hover:bg-white hover:underline'
+              >
+                Cancel
+              </Button>
+              <Button onClick={handleDelete} className='px-4 py-2 bg-red-600 text-white'>
+                Delete
+              </Button>
+            </div>
+          </div>
+        </div>
       )}
     </>
   )
