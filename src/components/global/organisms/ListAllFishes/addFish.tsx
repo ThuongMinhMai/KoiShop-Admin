@@ -6,11 +6,12 @@ import koiAPI from '@/lib/koiAPI'
 import './addFishForm.css'
 import { ArrowLeft } from 'lucide-react'
 import { isDataView } from 'util/types'
+import { boolean } from 'zod'
 interface Fish {
   id: number
   name: string
   origin: string
-  gender: string
+  gender: string | boolean
   dob: Date
   length: number
   weight: number
@@ -58,7 +59,7 @@ const AddFishForm: React.FC = () => {
   const [fishData, setFishData] = useState({
     name: '',
     origin: '',
-    gender: true,
+    gender: null ,
     dob: new Date(),
     length: 0,
     weight: 0,
@@ -69,7 +70,7 @@ const AddFishForm: React.FC = () => {
     dailyFeedAmount: 0,
     lastHealthCheck: new Date(),
     koiBreedIds: [],
-    imageUrls: [null],
+    imageUrls: [],
     isDeleted: false
   })
 
@@ -95,7 +96,7 @@ const AddFishForm: React.FC = () => {
         setFishData({
           name: response.data.data.name || '',
           origin: response.data.data.origin || '',
-          gender: response.data.data.gender,
+          gender: response.data.data.gender === "Male"?true: false,
           dob: response.data.data.dob ? new Date(response.data.data.dob) : new Date(),
           length: response.data.data.length || 0,
           weight: response.data.data.weight || 0,
@@ -108,9 +109,11 @@ const AddFishForm: React.FC = () => {
             ? new Date(response.data.data.lastHealthCheck)
             : new Date(),
           koiBreedIds: response.data.data.koiBreedIds || [],
-          imageUrls: response.data.data.imageUrls || [null],
+          imageUrls: response.data.data.imageUrls || [],
           isDeleted: false
         })
+           
+          console.log("gioi tinh",response.data.data.gender)
         console.log('fish data:', response.data.data)
       } catch (error) {
         console.error('Error fetching breed data:', error)
@@ -128,54 +131,70 @@ const AddFishForm: React.FC = () => {
     })
   }
 
+  // const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+  //   if (id) {
+  //     const { name, value, type } = e.target
+  //     // Type guard for HTMLInputElement
+  //     if (e.target instanceof HTMLInputElement) {
+  //       const inputValue =
+  //         type === 'checkbox'
+  //           ? e.target.checked
+  //           : name === 'dob' || name === 'lastHealthCheck'
+  //             ? new Date(value)
+  //             : name === 'gender'
+  //             ? value.toLowerCase()  === 'male'
+  //             : value
+  //       setFishData({
+  //         ...fishData,
+  //         [e.target.name]: e.target.value
+  //       })
+  //     } else if (e.target instanceof HTMLSelectElement) {
+  //       const selectedOptions = Array.from(e.target.selectedOptions, (option) => Number(option.value))
+  //       setFishData({
+  //         ...fishData,
+  //         [e.target.name]: selectedOptions
+  //       })
+  //     }
+  //   } else {
+  //     const { name, value, type } = e.target
+  //     // Type guard for HTMLInputElement
+  //     if (e.target instanceof HTMLInputElement) {
+  //       const inputValue =
+  //         type === 'checkbox'
+  //           ? e.target.checked
+  //           : name === 'dob' || name === 'lastHealthCheck'
+  //             ? new Date(value)
+  //             : value
+  //       setNewFish((prevFish) => ({
+  //         ...prevFish,
+  //         [name]: inputValue
+  //       }))
+  //     } else if (e.target instanceof HTMLSelectElement) {
+  //       const selectedOptions = Array.from(e.target.selectedOptions, (option) => Number(option.value))
+  //       setNewFish((prevFish) => ({
+  //         ...prevFish,
+  //         [name]: selectedOptions
+  //       }))
+  //     }
+  //   }
+  // }
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-    if (id) {
-      const { name, value, type } = e.target
-      // Type guard for HTMLInputElement
-      if (e.target instanceof HTMLInputElement) {
-        const inputValue =
-          type === 'checkbox'
-            ? e.target.checked
-            : name === 'dob' || name === 'lastHealthCheck'
-              ? new Date(value)
-              : name === 'gender'
-              ? value.toLowerCase()  === 'male'
-              : value
-        setFishData({
-          ...fishData,
-          [e.target.name]: e.target.value
-        })
-      } else if (e.target instanceof HTMLSelectElement) {
-        const selectedOptions = Array.from(e.target.selectedOptions, (option) => Number(option.value))
-        setFishData({
-          ...fishData,
-          [e.target.name]: selectedOptions
-        })
-      }
-    } else {
-      const { name, value, type } = e.target
-      // Type guard for HTMLInputElement
-      if (e.target instanceof HTMLInputElement) {
-        const inputValue =
-          type === 'checkbox'
-            ? e.target.checked
-            : name === 'dob' || name === 'lastHealthCheck'
-              ? new Date(value)
-              : value
-        setNewFish((prevFish) => ({
-          ...prevFish,
-          [name]: inputValue
-        }))
-      } else if (e.target instanceof HTMLSelectElement) {
-        const selectedOptions = Array.from(e.target.selectedOptions, (option) => Number(option.value))
-        setNewFish((prevFish) => ({
-          ...prevFish,
-          [name]: selectedOptions
-        }))
-      }
-    }
-  }
+    const { name, value, type } = e.target
+    let inputValue: any = value
 
+    if (type === 'checkbox') {
+      inputValue = e.target.checked
+    } else if (name === 'dob' || name === 'lastHealthCheck') {
+      inputValue = new Date(value)
+    } else if (name === 'gender') {
+      inputValue = value === 'true'
+    }else if (name === 'length' || name === 'weight' || name === 'price' || name === 'dailyFeedAmount') {
+      // Parse the value as a number if the field requires it
+      inputValue = parseFloat(value) || 0; // default to 0 if value is NaN
+    }
+
+    setFishData((prev) => ({ ...prev, [name]: inputValue }))
+  }
   const addKoiCertificate = () => {
     setNewFish((prevFish) => ({
       ...prevFish,
@@ -196,6 +215,7 @@ const AddFishForm: React.FC = () => {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
+    console.log("value udate", fishData)
     try {
       if (id) {
         await koiAPI.put(`/api/v1/koi-fishes/${id}`, fishData)
@@ -209,7 +229,7 @@ const AddFishForm: React.FC = () => {
         const response = await koiAPI.post('/api/v1/koi-fishes', {
           name: newFish.name,
           origin: newFish.origin,
-          gender: newFish.gender,
+          gender: newFish.gender ,
           dob: newFish.dob,
           length: 0,
           weight: 0,
@@ -282,6 +302,9 @@ const AddFishForm: React.FC = () => {
       </div>
       {id ? (
         <form id='addFishForm' onSubmit={handleSubmit}>
+        
+        
+      
           <h2 className='text-2xl font-semibold mb-4 text-center'>{id ? 'Update' : 'Add'} Fish</h2>
 
           <label htmlFor='name'>Name:</label>
@@ -293,15 +316,23 @@ const AddFishForm: React.FC = () => {
           {/* <label htmlFor='gender'>Gender:</label>
           <input type='text' id='gender' name='gender' value={fishData.gender} onChange={handleInputChange} />
           <br /> */}
-          <label htmlFor='gender'>Gender:</label>
-          <input
+         <label>Gender:</label>
+        <label>
+          <input type="radio" name="gender" value="true" checked={fishData.gender === "Male" || fishData.gender === true} onChange={handleInputChange} />
+          Male
+        </label>
+        <label>
+          <input type="radio" name="gender" value="false" checked={fishData.gender === "Female"|| fishData.gender === false} onChange={handleInputChange} />
+          Female
+        </label>
+          {/* <input
             type='checkbox'
             id='gender'
             name='gender'
             title='Male'
             checked={fishData.gender}
             onChange={handleInputChange}
-          />
+          /> */}
           {/* <select id='gender' name='gender' value={fishData.gender ? 'true' : 'false'} onChange={handleInputChange}>
             <option value='true'>Male</option>
             <option value='false'>Female</option>
@@ -427,6 +458,7 @@ const AddFishForm: React.FC = () => {
           <input type='text' id='origin' name='origin' value={newFish.origin} onChange={handleInputChange} />
           <br />
           <label htmlFor='gender'>Gender:</label>
+
           <input type='text' id='gender' name='gender' value={newFish.gender} onChange={handleInputChange} />
           <br />
           <label htmlFor='dob'>Date of Birth:</label>
