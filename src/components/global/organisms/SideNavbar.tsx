@@ -63,12 +63,12 @@ export default function SideNavbar({ isManager }: SideNavbarProps) {
       icon: Fish,
       variant: 'ghost' as 'default' | 'ghost'
     },
-    {
-      title: 'Diets',
-      href: '/diets',
-      icon: Nut,
-      variant: 'ghost' as 'default' | 'ghost'
-    },
+    // {
+    //   title: 'Diets',
+    //   href: '/diets',
+    //   icon: Nut,
+    //   variant: 'ghost' as 'default' | 'ghost'
+    // },
     {
       title: 'Users',
       href: '/users',

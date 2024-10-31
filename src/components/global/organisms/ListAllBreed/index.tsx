@@ -128,7 +128,7 @@ function ListAllBreed() {
         data={breeds}
         columns={columns(navigate)}
         Toolbar={DataTableToolbar}
-        rowString="Orders"
+        rowString="Breeds"
       />
       {/* {isModalOpen && (
         <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
