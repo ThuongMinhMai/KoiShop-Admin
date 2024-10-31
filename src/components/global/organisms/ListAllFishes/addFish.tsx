@@ -61,7 +61,7 @@ const AddFishForm: React.FC = () => {
   const [fishData, setFishData] = useState({
     name: '',
     origin: '',
-    gender: null ,
+    gender: null,
     dob: new Date(),
     length: 0,
     weight: 0,
@@ -98,7 +98,7 @@ const AddFishForm: React.FC = () => {
         setFishData({
           name: response.data.data.name || '',
           origin: response.data.data.origin || '',
-          gender: response.data.data.gender === "Male"?true: false,
+          gender: response.data.data.gender === 'Male' ? true : false,
           dob: response.data.data.dob ? new Date(response.data.data.dob) : new Date(),
           length: response.data.data.length || 0,
           weight: response.data.data.weight || 0,
@@ -114,8 +114,8 @@ const AddFishForm: React.FC = () => {
           imageUrls: response.data.data.imageUrls || [],
           isDeleted: false
         })
-           
-          console.log("gioi tinh",response.data.data.gender)
+
+        console.log('gioi tinh', response.data.data.gender)
         console.log('fish data:', response.data.data)
       } catch (error) {
         console.error('Error fetching breed data:', error)
@@ -133,52 +133,67 @@ const AddFishForm: React.FC = () => {
     })
   }
 
+  // const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+  //   // if (id) {
+  //   //   const { name, value, type } = e.target
+  //   //   // Type guard for HTMLInputElement
+  //   //   if (e.target instanceof HTMLInputElement) {
+  //   //     const inputValue =
+  //   //       type === 'checkbox'
+  //   //         ? e.target.checked
+  //   //         : name === 'dob' || name === 'lastHealthCheck'
+  //   //           ? new Date(value)
+  //   //           : name === 'gender'
+  //   //           ? value.toLowerCase()  === 'male'
+  //   //           : value
+  //   //     setFishData({
+  //   //       ...fishData,
+  //   //       [e.target.name]: e.target.value
+  //   //     })
+  //   //   } else if (e.target instanceof HTMLSelectElement) {
+  //   //     const selectedOptions = Array.from(e.target.selectedOptions, (option) => Number(option.value))
+  //   //     setFishData({
+  //   //       ...fishData,
+  //   //       [e.target.name]: selectedOptions
+  //   //     })
+  //   //   }
+  //   // } else {
+  //   const { name, value, type } = e.target
+  //   // Type guard for HTMLInputElement
+  //   if (e.target instanceof HTMLInputElement) {
+  //     const inputValue =
+  //       type === 'checkbox' ? e.target.checked : name === 'dob' || name === 'lastHealthCheck' ? new Date(value) : value
+  //     setNewFish((prevFish) => ({
+  //       ...prevFish,
+  //       [name]: inputValue
+  //     }))
+  //   } else if (e.target instanceof HTMLSelectElement) {
+  //     const selectedOptions = Array.from(e.target.selectedOptions, (option) => Number(option.value))
+  //     setNewFish((prevFish) => ({
+  //       ...prevFish,
+  //       [name]: selectedOptions
+  //     }))
+  //   }
+  //   // }
+  // }
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-    // if (id) {
-    //   const { name, value, type } = e.target
-    //   // Type guard for HTMLInputElement
-    //   if (e.target instanceof HTMLInputElement) {
-    //     const inputValue =
-    //       type === 'checkbox'
-    //         ? e.target.checked
-    //         : name === 'dob' || name === 'lastHealthCheck'
-    //           ? new Date(value)
-    //           : name === 'gender'
-    //           ? value.toLowerCase()  === 'male'
-    //           : value
-    //     setFishData({
-    //       ...fishData,
-    //       [e.target.name]: e.target.value
-    //     })
-    //   } else if (e.target instanceof HTMLSelectElement) {
-    //     const selectedOptions = Array.from(e.target.selectedOptions, (option) => Number(option.value))
-    //     setFishData({
-    //       ...fishData,
-    //       [e.target.name]: selectedOptions
-    //     })
-    //   }
-    // } else {
-      const { name, value, type } = e.target
-      // Type guard for HTMLInputElement
-      if (e.target instanceof HTMLInputElement) {
-        const inputValue =
-          type === 'checkbox'
-            ? e.target.checked
-            : name === 'dob' || name === 'lastHealthCheck'
-              ? new Date(value)
-              : value
-        setNewFish((prevFish) => ({
-          ...prevFish,
-          [name]: inputValue
-        }))
-      } else if (e.target instanceof HTMLSelectElement) {
-        const selectedOptions = Array.from(e.target.selectedOptions, (option) => Number(option.value))
-        setNewFish((prevFish) => ({
-          ...prevFish,
-          [name]: selectedOptions
-        }))
+    const { name, value, type } = e.target
+    let inputValue: any
+    if (e.target instanceof HTMLInputElement) {
+      if (type === 'checkbox') {
+        inputValue = e.target.checked
+      } else if (name === 'dob' || name === 'lastHealthCheck') {
+        inputValue = new Date(value)
+      } else if (name === 'price') {
+        inputValue = parseFloat(value)
+      } else {
+        inputValue = value
       }
-    // }
+      setNewFish((prevFishData) => ({ ...prevFishData, [name]: inputValue }))
+    } else if (e.target instanceof HTMLSelectElement) {
+      const selectedOptions = Array.from(e.target.selectedOptions, (option) => Number(option.value))
+      setNewFish((prevFishData) => ({ ...prevFishData, [name]: selectedOptions }))
+    }
   }
   const handleUpdateChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value, type } = e.target
@@ -190,9 +205,9 @@ const AddFishForm: React.FC = () => {
       inputValue = new Date(value)
     } else if (name === 'gender') {
       inputValue = value === 'true'
-    }else if (name === 'length' || name === 'weight' || name === 'price' || name === 'dailyFeedAmount') {
+    } else if (name === 'length' || name === 'weight' || name === 'price' || name === 'dailyFeedAmount') {
       // Parse the value as a number if the field requires it
-      inputValue = parseFloat(value) || 0; // default to 0 if value is NaN
+      inputValue = parseFloat(value) || 0 // default to 0 if value is NaN
     }
 
     setFishData((prev) => ({ ...prev, [name]: inputValue }))
@@ -217,7 +232,7 @@ const AddFishForm: React.FC = () => {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
-    console.log("value udate", fishData)
+    console.log('value udate', fishData)
     try {
       if (id) {
         await koiAPI.put(`/api/v1/koi-fishes/${id}`, fishData)
@@ -231,15 +246,15 @@ const AddFishForm: React.FC = () => {
         const response = await koiAPI.post('/api/v1/koi-fishes', {
           name: newFish.name,
           origin: newFish.origin,
-          gender: newFish.gender ,
+          gender: newFish.gender,
           dob: newFish.dob,
-          length: 0,
-          weight: 0,
-          isAvailableForSale: true,
-          price: 0,
-          isSold: true,
+          length: newFish.length,
+          weight: newFish.weight,
+          isAvailableForSale: newFish.isAvailableForSale,
+          price: newFish.price,
+          isSold: newFish.isSold,
           personalityTraits: newFish.personalityTraits,
-          dailyFeedAmount: 0,
+          dailyFeedAmount: newFish.dailyFeedAmount,
           lastHealthCheck: newFish.lastHealthCheck,
           koiBreedIds: newFish.koiBreedIds,
           imageUrls: newFish.imageUrls,
@@ -304,9 +319,6 @@ const AddFishForm: React.FC = () => {
       </div>
       {id ? (
         <form id='addFishForm' onSubmit={handleSubmit}>
-        
-        
-      
           <h2 className='text-2xl font-semibold mb-4 text-center'>{id ? 'Update' : 'Add'} Fish</h2>
 
           <label htmlFor='name'>Name:</label>
@@ -318,15 +330,27 @@ const AddFishForm: React.FC = () => {
           {/* <label htmlFor='gender'>Gender:</label>
           <input type='text' id='gender' name='gender' value={fishData.gender} onChange={handleInputChange} />
           <br /> */}
-         <label>Gender:</label>
-        <label>
-          <input type="radio" name="gender" value="true" checked={fishData.gender === "Male" || fishData.gender === true} onChange={handleUpdateChange} />
-          Male
-        </label>
-        <label>
-          <input type="radio" name="gender" value="false" checked={fishData.gender === "Female"|| fishData.gender === false} onChange={handleUpdateChange} />
-          Female
-        </label>
+          <label>Gender:</label>
+          <label>
+            <input
+              type='radio'
+              name='gender'
+              value='true'
+              checked={fishData.gender === 'Male' || fishData.gender === true}
+              onChange={handleUpdateChange}
+            />
+            Male
+          </label>
+          <label>
+            <input
+              type='radio'
+              name='gender'
+              value='false'
+              checked={fishData.gender === 'Female' || fishData.gender === false}
+              onChange={handleUpdateChange}
+            />
+            Female
+          </label>
           {/* <input
             type='checkbox'
             id='gender'
@@ -437,7 +461,6 @@ const AddFishForm: React.FC = () => {
             placeholder='Enter image URL'
             value={fishData.imageUrls}
             onChange={(e) => setFishData({ ...fishData, imageUrls: [String(e.target.value)] })}
-
           />
           {/* <button type='button' onClick={addImageUrl}>
         Add Image URL
@@ -448,7 +471,9 @@ const AddFishForm: React.FC = () => {
           <li key={index}>{url}</li>
         ))}
       </ul> */}
-          <button type='submit' className='w-full py-2 px-4'>{id ? 'Update' : 'Add'} Fish</button>
+          <button type='submit' className='w-full py-2 px-4'>
+            {id ? 'Update' : 'Add'} Fish
+          </button>
         </form>
       ) : (
         <form id='addFishForm' onSubmit={handleSubmit}>
@@ -575,10 +600,12 @@ const AddFishForm: React.FC = () => {
           <li key={index}>{url}</li>
         ))}
       </ul> */}
-          <button type='submit' className='w-full py-2 px-4'>{id ? 'Update' : 'Add'} Fish</button>
+          <button type='submit' className='w-full py-2 px-4'>
+            {id ? 'Update' : 'Add'} Fish
+          </button>
         </form>
       )}
-       <div className='max-w-md mx-auto'>
+      <div className='max-w-md mx-auto'>
         {id && (
           <Button
             className='w-full py-2 px-4 mt-4 border-primary text-primary hover:text-primary'
