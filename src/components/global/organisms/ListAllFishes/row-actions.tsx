@@ -23,7 +23,7 @@ interface Fish {
   isConsigned: boolean
   isSold: boolean
   ownerId: number
-  koiCertificates: object
+  koiCertificates: []
   koiBreeds: object
 }
 

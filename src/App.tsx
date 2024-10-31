@@ -11,6 +11,9 @@ import ProfilePage from './components/global/templates/ProfilePage'
 import StaffProtectedRoute from './auth/StaffProtectedRoute'
 import AllFishes from './components/global/templates/AllFishes'
 import AddFishForm from './components/global/organisms/ListAllFishes/addFish'
+import AllOrder from './components/global/templates/AllOrder'
+import AllBreeds from './components/global/templates/AllBreeds'
+import BreedForm from './components/global/templates/BreedForm'
 const RouteLayout = React.lazy(() => import('./components/global/Layout/RouteLayout'))
 const AllAccount= React.lazy(() => import('./components/global/templates/AllAccount'))
 
@@ -57,7 +60,7 @@ function App() {
           path='/orders'
           element={
             <ManagerProtectedRoute>
-              <Suspense fallback={<Loader />}>{/* components */}</Suspense>
+              <Suspense fallback={<Loader />}><AllOrder/></Suspense>
             </ManagerProtectedRoute>
           }
         />
@@ -65,7 +68,23 @@ function App() {
           path='/breeds'
           element={
             <ManagerProtectedRoute>
-              <Suspense fallback={<Loader />}>{/* components */}</Suspense>
+              <Suspense fallback={<Loader />}><AllBreeds /></Suspense>
+            </ManagerProtectedRoute>
+          }
+        />
+        <Route
+          path='/breeds/add'
+          element={
+            <ManagerProtectedRoute>
+              <Suspense fallback={<Loader />}><BreedForm /></Suspense>
+            </ManagerProtectedRoute>
+          }
+        />
+        <Route
+          path='/breeds/:id'
+          element={
+            <ManagerProtectedRoute>
+              <Suspense fallback={<Loader />}><BreedForm /></Suspense>
             </ManagerProtectedRoute>
           }
         />
@@ -85,19 +104,12 @@ function App() {
             </ManagerProtectedRoute>
           }
         />
-        <Route
-          path='/diets'
-          element={
-            <ManagerProtectedRoute>
-              <Suspense fallback={<Loader />}>{/* components */}</Suspense>
-            </ManagerProtectedRoute>
-          }
-        />
+      
         <Route
           path='/ordersCheck'
           element={
             <StaffProtectedRoute>
-              <Suspense fallback={<Loader />}>{/* components */}</Suspense>
+              <Suspense fallback={<Loader />}><AllOrder/></Suspense>
             </StaffProtectedRoute>
           }
         />
