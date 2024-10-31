@@ -1,0 +1,58 @@
+#addFishForm {
+    width: 50%;
+    margin: 0 auto;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    background-color: #f9f9f9;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+}
+
+#addFishForm label {
+    display: block;
+    padding-bottom: 10px;
+    font-weight: bold;
+}
+
+#addFishForm input[type="text"],
+#addFishForm input[type="date"],
+#addFishForm input[type="number"],
+#addFishForm select {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-sizing: border-box;
+}
+
+#addFishForm input[type="checkbox"] {
+    margin-right: 10px;
+}
+
+#addFishForm button {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+#addFishForm button:hover {
+    background-color: #45a049;
+}
+
+#addFishForm ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+#addFishForm ul li {
+    background-color: #e0e0e0;
+    margin-bottom: 5px;
+    padding: 10px;
+    border-radius: 5px;
+}
