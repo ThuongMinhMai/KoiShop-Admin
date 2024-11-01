@@ -265,7 +265,7 @@ function ListAllOrder() {
                             src={
                               fishDetails[detail.koiFishId].koiFishImages.length === 0
                                 ? 'https://visinhcakoi.com/wp-content/uploads/2021/07/ca-koi-showa-2-600x874-1.jpg'
-                                : fishDetails[detail.koiFishId].koiFishImages[0]
+                                : fishDetails[detail.koiFishId].koiFishImages[0].imageUrl
                             }
                           />
                           <div>
@@ -300,7 +300,7 @@ function ListAllOrder() {
                         <p>
                           <strong>Status:</strong> {detail.status}
                         </p>
-                        {user?.roleName === 'MANAGER' && detail.status === 'PENDING' && (
+                        {user?.roleName === 'MANAGER' && detail.status === 'PENDING' && selectedOrder.orderStatus !== 'COMPLETED' && (
                           <Button className='mt-2' onClick={() => handleAssignStaff(detail.id)}>
                             Assign for staff
                           </Button>
