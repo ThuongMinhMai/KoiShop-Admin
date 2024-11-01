@@ -52,26 +52,22 @@ export const columns = (
     {
       accessorKey: 'koiFishImages',
       header: ({ column }) => <DataTableColumnHeader column={column} title='koi Fish Images' />,
-      cell: ({ row }) => (
-        <div className='ml-5'>
-          <img
-            src={
-              row.getValue('imageUrl')
-                ? row.getValue('imageUrl')
-                : 'https://sanvuonadong.vn/wp-content/uploads/2021/02/ca-koi-buom-01.jpg'
-            }
-            alt={row.getValue('name')}
-            className='w-12 h-24 rounded-lg object-cover'
-          />
-        </div>
-        // <div>
-        //   <img
-        //     className='rounded-full h-12 w-12 object-cover drop-shadow-lg'
-        //     src={row.getValue('koiFishImages')}
-        //     alt='koiFishImages'
-        //   />
-        // </div>
-      ),
+      cell: ({ row }) => {
+        const images = row.getValue('koiFishImages') as { imageUrl: string }[]
+        const imageUrl =
+          images && images.length > 0
+            ? images[0].imageUrl
+            : 'https://sanvuonadong.vn/wp-content/uploads/2021/02/ca-koi-buom-01.jpg'
+        return (
+          <div className='ml-5'>
+            <img
+              src={imageUrl}              
+              alt={row.getValue('name')}
+              className='w-12 h-24 rounded-lg object-cover'
+            />
+          </div>
+        )
+      },
       enableHiding: false
     },
     {
@@ -84,6 +80,29 @@ export const columns = (
       ),
       enableHiding: false
     },
+    {
+      accessorKey: 'koiBreeds',
+      header: ({ column }) => <DataTableColumnHeader column={column} title='Koi Breeds' />,
+      cell: ({ row }) => {
+        const breeds = row.getValue('koiBreeds') as { name: string}[];
+    
+        return (
+          <div className='ml-5 flex flex-wrap items-center gap-3'>
+            {breeds && breeds.length > 0 ? (
+              breeds.slice(0, 2).map((breed, index) => (
+                <div key={index} className='flex items-center'>
+                  <span className='ml-2'>{breed.name}</span>
+                </div>
+              ))
+            ) : (
+              <span>Unknown Breed</span>
+            )}
+          </div>
+        );
+      },
+      enableHiding: false,
+    },
+    
     {
       accessorKey: 'price',
       header: ({ column }) => <DataTableColumnHeader column={column} title='Price' />,
