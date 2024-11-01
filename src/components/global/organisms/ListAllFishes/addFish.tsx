@@ -98,7 +98,7 @@ const AddFishForm: React.FC = () => {
     const fetchFish = async () => {
       try {
         const response = await koiAPI.get(`/api/v1/koi-fishes/${id}`)
-        console.log("gion ne",response.data.data.koiBreeds,response.data.data.koiBreeds[0],response.data.data.koiBreeds[1])
+        console.log("gion ne",response.data.data.koiBreeds,response.data.data.koiBreeds[0].id,response.data.data.koiBreeds[1])
         setFishData({
           name: response.data.data.name || '',
           origin: response.data.data.origin || '',
@@ -115,7 +115,7 @@ const AddFishForm: React.FC = () => {
             ? new Date(response.data.data.lastHealthCheck)
             : new Date(),
           koiBreedIds: response.data.data.koiBreeds || [],
-          imageUrls: response.data.data.imageUrls || [],
+          imageUrls: response.data.data.koiFish || [],
           isDeleted: false
         })
 
@@ -250,6 +250,7 @@ const AddFishForm: React.FC = () => {
     console.log('value udate', fishData)
     try {
       if (id) {
+        fishData.koiBreedIds = fishData.koiBreedIds.map(breed => breed.id);
         await koiAPI.put(`/api/v1/koi-fishes/${id}`, fishData)
         toast({
           variant: 'success',
@@ -443,7 +444,7 @@ const AddFishForm: React.FC = () => {
           <label htmlFor='isSold'>Sold:</label>
           <input type='checkbox' id='isSold' name='isSold' checked={fishData.isSold} onChange={handleUpdateChange} />
           <br />
-          {/* <label htmlFor='koiBreedIds'>Koi Breed:</label>
+           {/* <label htmlFor='koiBreedIds'>Koi Breed:</label>
           <select
             name='koiBreedIds'
             value={fishData.koiBreedIds[0]} // Set selected options
@@ -475,18 +476,19 @@ const AddFishForm: React.FC = () => {
               </option>
             ))}
           </select> */}
-          {fishData.koiBreedIds.map((id, index) => (
+          {fishData.koiBreedIds.map((breed, index) => (
         <div key={index}>
           <label htmlFor={`koiBreedIds-${index}`}>Koi Breed {index + 1}:</label>
           <select
             id={`koiBreedIds-${index}`}
-            value={id || ''}
+            value={breed.id || ''}
             onChange={(e) => {
               const selectedId = Number(e.target.value);
               const newKoiBreedIds = [...fishData.koiBreedIds];
               newKoiBreedIds[index] = selectedId; // Update only the selected index
               setFishData({ ...fishData, koiBreedIds: newKoiBreedIds });
             }}
+            disabled
           >
             <option value="" disabled>Select a breed</option>
             {koiBreeds.map((breed) => (
@@ -517,7 +519,7 @@ const AddFishForm: React.FC = () => {
               </option>
             ))}
           </select> */}
-          <br />
+          {/* <br /> */}
           {/* <label htmlFor='koiCertificates'>Koi Certificates:</label>
           <input
             type='text'
@@ -530,13 +532,13 @@ const AddFishForm: React.FC = () => {
           {/* <button type='button' onClick={addKoiCertificate}>
         Add Certificate
       </button> */}
-          <br />
+          {/* <br /> */}
           {/* <ul>
         {newFish.koiCertificates.map((cert, index) => (
           <li key={index}>{cert}</li>
         ))}
       </ul> */}
-          <label htmlFor='imageUrls'>Image URLs:</label>
+          {/* <label htmlFor='imageUrls'>Image URLs:</label>
           <input
             type='text'
             id='imageUrls'
@@ -544,11 +546,11 @@ const AddFishForm: React.FC = () => {
             placeholder='Enter image URL'
             value={fishData.imageUrls}
             onChange={(e) => setFishData({ ...fishData, imageUrls: [String(e.target.value)] })}
-          />
+          /> */}
           {/* <button type='button' onClick={addImageUrl}>
         Add Image URL
       </button> */}
-          <br />
+          {/* <br /> */}
           {/* <ul>
         {newFish.imageUrls.map((url, index) => (
           <li key={index}>{url}</li>
