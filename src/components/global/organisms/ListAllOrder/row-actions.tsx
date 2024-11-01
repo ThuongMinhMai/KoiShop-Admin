@@ -30,7 +30,7 @@ export function DataTableRowActions<TData extends Order>({ row, handleStatusChan
       <Select
         value={statusString}
         onValueChange={(value) => handleStatusChange(row.original, value)}
-        disabled={statusString === 'REFUNDED' || statusString === 'COMPLETED' || user?.roleName === 'STAFF'}
+        disabled={statusString === 'REFUNDED' || statusString === 'COMPLETED' || statusString === 'PROCESSING' || user?.roleName === 'STAFF'}
       >
         <SelectTrigger className='w-fit'>
           <SelectValue />
@@ -38,6 +38,9 @@ export function DataTableRowActions<TData extends Order>({ row, handleStatusChan
         <SelectContent className='w-fit'>
           <SelectItem value='PENDING'>
             <Badge variant='warning'>Pending</Badge>
+          </SelectItem>
+          <SelectItem value='PROCESSING'>
+            <Badge variant='info'>Processing</Badge>
           </SelectItem>
           <SelectItem value='REFUNDED'>
             <Badge variant='destructive'>Refunded</Badge>
