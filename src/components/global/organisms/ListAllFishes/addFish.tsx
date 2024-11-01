@@ -8,6 +8,7 @@ import { ArrowLeft } from 'lucide-react'
 import { isDataView } from 'util/types'
 import { boolean } from 'zod'
 import { Button } from '../../atoms/ui/button'
+import { previousDay } from 'date-fns'
 
 interface Fish {
   id: number
@@ -80,11 +81,13 @@ const AddFishForm: React.FC = () => {
   const [newKoiCertificate, setNewKoiCertificate] = useState<string>('')
   const [newImageUrl, setNewImageUrl] = useState<string>('')
   const [showDeleteModal, setShowDeleteModal] = useState(false)
+  const [newKoiBreedIds, setNewKoiBreedIds] = useState([])
 
   useEffect(() => {
     const fetchKoiBreeds = async () => {
       try {
         const response = await koiAPI.get('/api/v1/koi-breeds')
+        console.log("fetch koi breed", response.data.data);
         setKoiBreeds(response.data.data)
         console.log('koi breeds:', response.data.data)
       } catch (error) {
@@ -95,6 +98,7 @@ const AddFishForm: React.FC = () => {
     const fetchFish = async () => {
       try {
         const response = await koiAPI.get(`/api/v1/koi-fishes/${id}`)
+        console.log("gion ne",response.data.data.koiBreeds,response.data.data.koiBreeds[0],response.data.data.koiBreeds[1])
         setFishData({
           name: response.data.data.name || '',
           origin: response.data.data.origin || '',
@@ -110,7 +114,7 @@ const AddFishForm: React.FC = () => {
           lastHealthCheck: response.data.data.lastHealthCheck
             ? new Date(response.data.data.lastHealthCheck)
             : new Date(),
-          koiBreedIds: response.data.data.koiBreedIds || [],
+          koiBreedIds: response.data.data.koiBreeds || [],
           imageUrls: response.data.data.imageUrls || [],
           isDeleted: false
         })
@@ -229,7 +233,18 @@ const AddFishForm: React.FC = () => {
     }))
     setNewImageUrl('')
   }
+  const handleSelectChange = (e:any, index:any) => {
+    const selectedValue = Number(e.target.value);
+    const updatedKoiBreedIds = [...newFish.koiBreedIds];
 
+    if (index < updatedKoiBreedIds.length) {
+      updatedKoiBreedIds[index] = selectedValue;
+    } else {
+      updatedKoiBreedIds.push(selectedValue);
+    }
+
+    setNewFish({ ...newFish, koiBreedIds: updatedKoiBreedIds });
+  };
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     console.log('value udate', fishData)
@@ -243,6 +258,7 @@ const AddFishForm: React.FC = () => {
         })
         setTimeout(() => navigate('/fishes'), 1000)
       } else {
+        console.log("id bred", newFish.koiBreedIds)
         const response = await koiAPI.post('/api/v1/koi-fishes', {
           name: newFish.name,
           origin: newFish.origin,
@@ -308,8 +324,13 @@ const AddFishForm: React.FC = () => {
       console.error('Error deleting fish:', error)
     }
   }
+  // Assuming `fishData.koiBreedIds` and `koiBreeds` array are available
+  const selectedBreeds = fishData.koiBreedIds.map(
+    (breedId) => koiBreeds.find((breed) => breed.id === breedId)?.name || ''
+  )
 
   console.log('New FISH', newFish)
+  console.log('New FISH', selectedBreeds)
 
   return (
     <>
@@ -422,7 +443,69 @@ const AddFishForm: React.FC = () => {
           <label htmlFor='isSold'>Sold:</label>
           <input type='checkbox' id='isSold' name='isSold' checked={fishData.isSold} onChange={handleUpdateChange} />
           <br />
-          <label htmlFor='koiBreedIds'>Koi Breed:</label>
+          {/* <label htmlFor='koiBreedIds'>Koi Breed:</label>
+          <select
+            name='koiBreedIds'
+            value={fishData.koiBreedIds[0]} // Set selected options
+            onChange={(e) => {
+              const selectedOptions = Array.from(e.target.selectedOptions).map((option) => Number(option.value))
+              setFishData({ ...fishData, koiBreedIds: selectedOptions })
+            }}
+            // multiple // Allows selecting multiple breeds
+          >
+            {koiBreeds.map((breed) => (
+              <option key={breed.id} value={breed.id}>
+                {breed.name}
+              </option>
+            ))}
+          </select>
+          <label htmlFor='koiBreedIds'>Koi Breed2:</label>
+          <select
+            name='koiBreedIds'
+            value={fishData.koiBreedIds[1]} // Set selected options
+            onChange={(e) => {
+              const selectedOptions = Array.from(e.target.selectedOptions).map((option) => Number(option.value))
+              setFishData({ ...fishData, koiBreedIds: selectedOptions })
+            }}
+            // multiple // Allows selecting multiple breeds
+          >
+            {koiBreeds.map((breed) => (
+              <option key={breed.id} value={breed.id}>
+                {breed.name}
+              </option>
+            ))}
+          </select> */}
+          {fishData.koiBreedIds.map((id, index) => (
+        <div key={index}>
+          <label htmlFor={`koiBreedIds-${index}`}>Koi Breed {index + 1}:</label>
+          <select
+            id={`koiBreedIds-${index}`}
+            value={id || ''}
+            onChange={(e) => {
+              const selectedId = Number(e.target.value);
+              const newKoiBreedIds = [...fishData.koiBreedIds];
+              newKoiBreedIds[index] = selectedId; // Update only the selected index
+              setFishData({ ...fishData, koiBreedIds: newKoiBreedIds });
+            }}
+          >
+            <option value="" disabled>Select a breed</option>
+            {koiBreeds.map((breed) => (
+              <option key={breed.id} value={breed.id}>
+                {breed.name}
+              </option>
+            ))}
+          </select>
+
+          {/* {id && (
+            <div>
+              <h3>{koiBreeds.find(breed => breed.id === id).name}</h3>
+              <img src={koiBreeds.find(breed => breed.id === id).imageUrl} alt={koiBreeds.find(breed => breed.id === id).name} />
+              <p>{koiBreeds.find(breed => breed.id === id).content}</p>
+            </div>
+          )} */}
+        </div>
+      ))}
+          {/* <label htmlFor='koiBreedIds'>Koi Breed:</label>
           <select
             name='koiBreedIds'
             value={fishData.koiBreedIds.map(String)}
@@ -433,7 +516,7 @@ const AddFishForm: React.FC = () => {
                 {breed.name}
               </option>
             ))}
-          </select>
+          </select> */}
           <br />
           {/* <label htmlFor='koiCertificates'>Koi Certificates:</label>
           <input
@@ -546,7 +629,7 @@ const AddFishForm: React.FC = () => {
           <label htmlFor='isSold'>Sold:</label>
           <input type='checkbox' id='isSold' name='isSold' checked={newFish.isSold} onChange={handleInputChange} />
           <br />
-          <label htmlFor='koiBreedIds'>Koi Breed:</label>
+          {/* <label htmlFor='koiBreedIds'>Koi Breed:</label>
           <select
             name='koiBreedIds'
             value={newFish.koiBreedIds.map(String)}
@@ -560,6 +643,50 @@ const AddFishForm: React.FC = () => {
             ))}
           </select>
           <br />
+          <label htmlFor='koiBreedIds'>Koi Breed 2:</label>
+          <select
+            name='koiBreedIds'
+            value={newFish.koiBreedIds.map(String)} // Set selected options
+            onChange={(e) => {
+              const selectedOptions = Array.from(e.target.selectedOptions).map((option) => Number(option.value))
+              setNewFish({ ...newFish, koiBreedIds: [selectedOptions] })
+            }}
+            // multiple // Allows selecting multiple breeds
+          >
+            {koiBreeds.map((breed) => (
+              <option key={breed.id} value={breed.id}>
+                {breed.name}
+              </option>
+            ))}
+          </select> */}
+
+<label htmlFor='koiBreedId1'>Koi Breed 1:</label>
+      <select
+        name='koiBreedId1'
+        value={newFish.koiBreedIds[0] || ''}
+        onChange={(e) => handleSelectChange(e, 0)}
+      >
+        <option value=''>Select breed</option>
+        {koiBreeds.map((breed) => (
+          <option key={breed.id} value={breed.id}>
+            {breed.name}
+          </option>
+        ))}
+      </select>
+      <br />
+      <label htmlFor='koiBreedId2'>Koi Breed 2:</label>
+      <select
+        name='koiBreedId2'
+        value={newFish.koiBreedIds[1] || ''}
+        onChange={(e) => handleSelectChange(e, 1)}
+      >
+        <option value=''>Select breed</option>
+        {koiBreeds.map((breed) => (
+          <option key={breed.id} value={breed.id}>
+            {breed.name}
+          </option>
+        ))}
+      </select>
           {/* <label htmlFor='koiCertificates'>Koi Certificates:</label>
           <input
             type='text'

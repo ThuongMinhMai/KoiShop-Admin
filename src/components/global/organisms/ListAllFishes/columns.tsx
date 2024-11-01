@@ -25,7 +25,6 @@ interface Fish {
   ownerId: number
   koiCertificates: object
   koiBreeds: koiBreed[]
-  imageUrl: string
 }
 
 interface koiBreed {
@@ -85,17 +84,18 @@ export const columns = (
       header: ({ column }) => <DataTableColumnHeader column={column} title='Koi Breeds' />,
       cell: ({ row }) => {
         const breeds = row.getValue('koiBreeds') as { name: string}[];
-    
         return (
           <div className='ml-5 flex flex-wrap items-center gap-3'>
+           
             {breeds && breeds.length > 0 ? (
+            
               breeds.slice(0, 2).map((breed, index) => (
                 <div key={index} className='flex items-center'>
                   <span className='ml-2'>{breed.name}</span>
                 </div>
               ))
             ) : (
-              <span>Unknown Breed</span>
+              <span></span>
             )}
           </div>
         );
