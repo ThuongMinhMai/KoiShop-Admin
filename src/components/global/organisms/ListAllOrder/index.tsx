@@ -45,29 +45,30 @@ function ListAllOrder() {
   const [tempStatus, setTempStatus] = useState<{ [key: number]: string }>({})
   const [fishDetails, setFishDetails] = useState<{ [key: number]: any }>({})
   const [isFishDetailsLoading, setIsFishDetailsLoading] = useState(false)
+  const { user } = useAuth()
+
+  const fetchAllOrders = async () => {
+    setIsLoadingOrders(true)
+    try {
+      const response = await koiAPI.get<ApiResponse<Order[]>>(`/api/v1/orders`)
+      const result = response.data.data
+
+      setOrders(result || [])
+
+      const initialStatuses: { [key: number]: string } = {}
+      result.forEach((order: Order) => {
+        initialStatuses[order.id] = order.orderStatus
+      })
+
+      setTempStatus(initialStatuses)
+    } catch (error) {
+      console.log(error)
+    } finally {
+      setIsLoadingOrders(false)
+    }
+  }
 
   useEffect(() => {
-    const fetchAllOrders = async () => {
-      setIsLoadingOrders(true)
-      try {
-        const response = await koiAPI.get<ApiResponse<Order[]>>(`/api/v1/orders`)
-        const result = response.data.data
-
-        setOrders(result || [])
-
-        const initialStatuses: { [key: number]: string } = {}
-        result.forEach((order: Order) => {
-          initialStatuses[order.id] = order.orderStatus
-        })
-
-        setTempStatus(initialStatuses)
-      } catch (error) {
-        console.log(error)
-      } finally {
-        setIsLoadingOrders(false)
-      }
-    }
-
     fetchAllOrders()
   }, [])
 
@@ -97,6 +98,54 @@ function ListAllOrder() {
       fetchFishDetails(detail.koiFishId)
     })
     setIsFishDetailsLoading(false)
+  }
+
+  const handleAssignStaff = async (id: string) => {
+    if (selectedOrder) {
+      try {
+        await koiAPI.put(`/api/v1/order-detail/${id}/assign`, 3)
+        toast({
+          variant: 'success',
+          title: 'Updated successfully!',
+          description: `Order status has been changed to SHIPPING.`
+        })
+        fetchAllOrders()
+        setIsModalDetailOpen(false)
+      } catch (error) {
+        toast({
+          variant: 'destructive',
+          title: 'Unable to update order status!',
+          description: error.response.data.Result.message || 'Please try again!'
+        })
+      }
+    } else {
+      toast({
+        variant: 'destructive',
+        title: 'Unable to update order status!',
+        description: 'Please try again!'
+      })
+    }
+  }
+
+  const handleCompleted = async (id: string) => {
+    if (selectedOrder) {
+      try {
+        await koiAPI.put(`/api/v1/order-detail/change-to-completed/${id}`)
+        toast({
+          variant: 'success',
+          title: 'Updated successfully!',
+          description: `Order status has been changed to COMPLETED.`
+        })
+        fetchAllOrders()
+        setIsModalDetailOpen(false)
+      } catch (error) {
+        toast({
+          variant: 'destructive',
+          title: 'Unable to update order status!',
+          description: 'Please try again!'
+        })
+      }
+    }
   }
 
   const confirmStatusChange = async () => {
@@ -181,7 +230,7 @@ function ListAllOrder() {
               <Loader />
             </DialogContent>
           ) : (
-            <DialogContent>
+            <DialogContent className='max-h-[80vh] overflow-y-auto'>
               <h3 className='text-lg font-medium leading-6 text-gray-900'>Order Details</h3>
               <div className='mt-4 space-y-2'>
                 <p>
@@ -208,7 +257,7 @@ function ListAllOrder() {
                 <h4 className='mt-4 text-lg font-semibold'>Order Details:</h4>
                 <ul>
                   {selectedOrder.orderDetails.map((detail, index) => (
-                    <li key={index} className='ml-4 flex flex-col gap-y-3 border p-2'>
+                    <li key={index} className='ml-4 flex flex-col gap-y-3 border p-2 my-2 rounded-lg'>
                       {fishDetails[detail.koiFishId] && (
                         <div className='flex w-full justify-around'>
                           <img
@@ -251,6 +300,16 @@ function ListAllOrder() {
                         <p>
                           <strong>Status:</strong> {detail.status}
                         </p>
+                        {user?.roleName === 'MANAGER' && detail.status === 'PENDING' && (
+                          <Button className='mt-2' onClick={() => handleAssignStaff(detail.id)}>
+                            Assign for staff
+                          </Button>
+                        )}
+                        {user?.roleName === 'STAFF' && detail.status === 'SHIPPING' && (
+                          <Button className='mt-2' onClick={() => handleCompleted(detail.id)}>
+                            Completed
+                          </Button>
+                        )}
                       </div>
                     </li>
                   ))}
