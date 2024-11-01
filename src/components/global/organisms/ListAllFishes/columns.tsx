@@ -1,7 +1,7 @@
 import { ColumnDef } from '@tanstack/react-table'
 import { Tooltip } from 'antd'
 import { DataTableColumnHeader } from '../table/col-header'
-import { SquarePen, User, UserCheck } from 'lucide-react'
+import { Eye, SquarePen, User, UserCheck } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 import { Badge } from '../../atoms/ui/badge'
 import { DataTableRowActions } from './row-actions'
@@ -39,7 +39,7 @@ export const columns = (
   navigate: ReturnType<typeof useNavigate>,
   handleStatusChange: (fish: Fish, status: boolean) => void,
   handleEditName: (fish: Fish, newName: string) => void,
-  handleShowAmentiModal: (fish: Fish) => void
+  handleShowCertificateModal: (fish: Fish) => void
 ): ColumnDef<Fish>[] => {
   return [
     {
@@ -184,6 +184,26 @@ export const columns = (
         return <div>{formattedDate}</div>
       },
       filterFn: (row, id, value) => value.includes(row.getValue(id))
+    },
+    {
+      accessorKey: 'koiCertificates',
+      header: ({ column }) => <DataTableColumnHeader column={column} title='Certificates' />,
+      cell: ({ row }) => {
+        const koiCertificates = row.original.koiCertificates
+        return (
+          <div>
+            <div
+              className='text-primary flex gap-2 items-center cursor-pointer'
+              onClick={() => handleShowCertificateModal(row.original)}
+            >
+              <>
+                <Eye className='w-4 h-4 mr-2' />
+                View Certificates
+              </>
+            </div>
+          </div>
+        )
+      }
     },
     {
       accessorKey: 'isAvailableForSale',
